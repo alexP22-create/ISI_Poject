@@ -87,7 +87,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
         "esri/rest/locator"
       ]);
 
-      esriConfig.apiKey = "AAPKf969cbae8c8148c3937ebf320cc40c901X6A3d70ocPhfE3Sn6YjpP8kc58Skmb9PaQcJ2CQoJvW3DffxeIFpYVhDPoYL_72";
+      esriConfig.apiKey = "AAPKc51195b9373b4eeaa68102ca10b8020762XGYkRwQajtskp7Op3PU7z5kUArWiVzWKrrYVQ8vB76ulZmPpy-It8k96b5SIfD";
 
       this._Map = Map;
       this._MapView = MapView;
