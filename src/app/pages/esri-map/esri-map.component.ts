@@ -56,10 +56,10 @@ export class EsriMapComponent implements OnInit, OnDestroy {
 
   // Attributes
   zoom = 10;
-  center: Array<number> = [-118.73682450024377, 34.07817583063242];
+  center: Array<number> = [12.4964, 41.9028];
   basemap = "streets-vector";
   loaded = false;
-  pointCoords: number[] = [-118.73682450024377, 34.07817583063242];
+  pointCoords: number[] = [12.4964, 41.9028];
   dir: number = 0;
   count: number = 0;
   timeoutHandler = null;
@@ -140,15 +140,15 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  trailheadsRenderer = {
-    "type": "simple",
-    "symbol": {
-      "type": "picture-marker",
-      "url": "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
-      "width": "18px",
-      "height": "18px"
-    }
-  }
+  // trailheadsRenderer = {
+  //   "type": "simple",
+  //   "symbol": {
+  //     "type": "picture-marker",
+  //     "url": "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+  //     "width": "18px",
+  //     "height": "18px"
+  //   }
+ // }
 
   trailheadsLabels = {
     symbol: {
@@ -252,7 +252,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   trailsRenderer = {
     type: "simple",
     symbol: {
-      color: "#BA55D3",
+      color: "#0000FF",
       type: "simple-line",
       style: "solid"
     },
@@ -263,8 +263,8 @@ export class EsriMapComponent implements OnInit, OnDestroy {
         field: "ELEV_GAIN",
         minDataValue: 0,
         maxDataValue: 2300,
-        minSize: "3px",
-        maxSize: "7px"
+        minSize: "2px",
+        maxSize: "5px"
       }
     ]
   };
@@ -289,8 +289,8 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // Trailheads feature layer (points)
     var trailheadsLayer: __esri.FeatureLayer = new this._FeatureLayer({
       url:
-        "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0",
-      renderer: this.trailheadsRenderer,
+        "https://services8.arcgis.com/dZ8Cm3nZYMpOhNiG/arcgis/rest/services/Rome_Points/FeatureServer",
+    //  renderer: this.trailheadsRenderer,
       labelingInfo: [this.trailheadsLabels],
       outFields: ["TRL_NAME", "CITY_JUR", "X_STREET", "PARKING", "ELEV_FT"],
       popupTemplate: this.popupTrailheads
@@ -299,29 +299,29 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     this.map.add(trailheadsLayer);
 
 
-    // Trails feature layer (lines)
-    var trailsLayer: __esri.FeatureLayer = new this._FeatureLayer({
-      url:
-        "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
-      renderer: this.trailsRenderer,
-      opacity: .75,
-      outFields: ["TRL_NAME", "ELEV_GAIN"],
-      popupTemplate: this.popupTrails
-    });
+    // // Trails feature layer (lines)
+    // var trailsLayer: __esri.FeatureLayer = new this._FeatureLayer({
+    //   url:
+    //     "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0",
+    //   renderer: this.trailsRenderer,
+    //   opacity: .6,
+    //   outFields: ["TRL_NAME", "ELEV_GAIN"],
+    //   popupTemplate: this.popupTrails
+    // });
 
-    this.map.add(trailsLayer, 0);
+    // this.map.add(trailsLayer, 0);
 
-    // Parks and open spaces (polygons)
-    var parksLayer: __esri.FeatureLayer = new this._FeatureLayer({
-      url:
-        "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0",
-      renderer: this.openSpacesRenderer,
-      opacity: 0.2,
-      outFields: ["TYPE", "PARK_NAME", "AGNCY_NAME", "ACCESS_TYP", "GIS_ACRES", "TRLS_MI", "TOTAL_GOOD", "TOTAL_FAIR", "TOTAL_POOR"],
-      popupTemplate: this.popupOpenspaces
-    });
+    // // Parks and open spaces (polygons)
+    // var parksLayer: __esri.FeatureLayer = new this._FeatureLayer({
+    //   url:
+    //     "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Parks_and_Open_Space/FeatureServer/0",
+    //   renderer: this.openSpacesRenderer,
+    //   opacity: 0.2,
+    //   outFields: ["TYPE", "PARK_NAME", "AGNCY_NAME", "ACCESS_TYP", "GIS_ACRES", "TRLS_MI", "TOTAL_GOOD", "TOTAL_FAIR", "TOTAL_POOR"],
+    //   popupTemplate: this.popupOpenspaces
+    // });
 
-    this.map.add(parksLayer, 0);
+    // this.map.add(parksLayer, 0);
 
     console.log("feature layers added");
   }
