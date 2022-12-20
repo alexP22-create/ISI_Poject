@@ -289,11 +289,11 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     // Trailheads feature layer (points)
     var trailheadsLayer: __esri.FeatureLayer = new this._FeatureLayer({
       url:
-        "https://services8.arcgis.com/dZ8Cm3nZYMpOhNiG/arcgis/rest/services/Rome_Points/FeatureServer",
+        "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/tourist_attractions_in_rome/FeatureServer/0",
     //  renderer: this.trailheadsRenderer,
-      labelingInfo: [this.trailheadsLabels],
-      outFields: ["TRL_NAME", "CITY_JUR", "X_STREET", "PARKING", "ELEV_FT"],
-      popupTemplate: this.popupTrailheads
+      // labelingInfo: [this.trailheadsLabels],
+      // outFields: ["TRL_NAME", "CITY_JUR", "X_STREET", "PARKING", "ELEV_FT"],
+      // popupTemplate: this.popupTrailheads
     });
 
     this.map.add(trailheadsLayer);
