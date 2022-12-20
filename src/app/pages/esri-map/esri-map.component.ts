@@ -140,38 +140,19 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  // trailheadsRenderer = {
-  //   "type": "simple",
-  //   "symbol": {
-  //     "type": "picture-marker",
-  //     "url": "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
-  //     "width": "18px",
-  //     "height": "18px"
-  //   }
- // }
+//   trailheadsRenderer = {
+//     "type": "simple",
+//     "symbol": {
+//       "type": "picture-marker",
+//       "url": "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
+//       "width": "18px",
+//       "height": "18px"
+//     }
+//  }
 
-  trailheadsLabels = {
-    symbol: {
-      type: "text",
-      color: "#FFFFFF",
-      haloColor: "#5E8D74",
-      haloSize: "2px",
-      font: {
-        size: "12px",
-        family: "Noto Sans",
-        style: "italic",
-        weight: "normal"
-      }
-    },
-
-    labelPlacement: "above-center",
-    labelExpressionInfo: {
-      expression: "$feature.TRL_NAME"
-    }
-  };
   popupTrailheads = {
     "title": "{NAME}",
-    "content": "<b>Website:</b> {Website}<br><b>Cost:</b> {Cost}<br><b>Address:</b> {Address}<br><b>Latitude:</b> {Latitude}<br><b>Longitude:</b> {Longitude}"
+    "content": "<b>Website:</b> <a href={Website}>{Website} </a> <br><b>Cost:</b> {Cost}<br><b>Address:</b> {Address}<br><b>Latitude:</b> {Latitude}<br><b>Longitude:</b> {Longitude}"
   }
 
   addFeatureLayers() {
@@ -179,9 +160,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     var trailheadsLayer: __esri.FeatureLayer = new this._FeatureLayer({
       url:
         "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/Final_Rome_Layer/FeatureServer",
-    //  renderer: this.trailheadsRenderer,
-      labelingInfo: [this.trailheadsLabels],
-      // outFields: ["TRL_NAME", "CITY_JUR", "X_STREET", "PARKING", "ELEV_FT"],
+      // renderer: this.trailheadsRenderer, //TODO sa adaugam tipul obiectivului si bulina sa fie diferita pt fiecare tip
       popupTemplate: this.popupTrailheads
     });
 
