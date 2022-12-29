@@ -5,12 +5,45 @@
   (mapLoadedEvent)="mapLoadedEvent($event)">
 </app-esri-map> -->
 
+
+<!-- <div class="collapse navbar-collapse" id="navbarResponsive">
+  <ul class="navbar-nav ml-auto">
+     <li class="nav-item active">
+        <a class="nav-link" href="#">Home
+           <span class="sr-only" routerLink="/"></span>
+
+        </a>
+     </li>
+     <li class="nav-item">
+                 <div *ngIf="isUserLoggedIn; else isLogOut">
+                       <a class="nav-link" routerLink="/logout">Logout</a>
+                       <li class="nav-item"><a class="nav-link" routerLink="home">Home</a></li>
+                       <li class="nav-item"><a class="nav-link" routerLink="map">Map</a></li>
+                 </div>
+
+                 <ng-template #isLogOut>
+                             <a class="nav-link" routerLink="/login">Login</a>
+                 </ng-template>
+     </li>
+  </ul>
+</div> -->
+
 <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
   <div class="container">
     <a class="navbar-brand">Angular Router</a>
     <ul class="nav navbar-nav" routerLinkActive="active">
+      <li class="nav-item">
+        <div *ngIf="this.authService.isUserLoggedIn; else isLogOut">
+              <a class="nav-link" routerLink="/logout">Logout</a>
+              <li class="nav-item"><a class="nav-link" routerLink="map">Map</a></li>
+        </div>
+
+        <ng-template #isLogOut>
+                    <li><a class="nav-link" routerLink="/login">Login</a></li>
+                    <li><a class="nav-link" routerLink="/register">Register</a></li>
+        </ng-template>
+      </li>
       <li class="nav-item"><a class="nav-link" routerLink="home">Home</a></li>
-      <li class="nav-item"><a class="nav-link" routerLink="map">Map</a></li>
     </ul>
   </div>
 </nav>
