@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
 
    constructor(private authService : AuthService, private router : Router) { 
     this.error = false
+    this.message = ""
    }
 
    ngOnInit() {
@@ -27,28 +28,39 @@ export class RegisterComponent implements OnInit {
          userName: new FormControl(""),
          password: new FormControl(""),
       });
-      this.error = false;
+      this.error = false
+      this.message = ""
    }
 
    onClickSubmit(data: any) {
       this.userName = data.userName;
       this.password = data.password;
+      this.message = "";
+      this.error = false;
 
       console.log("Register page: " + this.userName);
       console.log("Register page: " + this.password);
 
-      if (localStorage.getItem(this.userName) == null) {
-        localStorage.setItem(this.userName, this.password);
-        this.error = false;
-      } else {
-        this.error = true;
+      if (localStorage.getItem(this.userName) != null) {
+         this.error = true;
+         this.message += " Username already exists!";
       }
-
-    //   this.authService.login(this.userName, this.password)
-    //      .subscribe( data => { 
-    //         console.log("Is Login Success: " + data); 
+      if (this.userName.indexOf(' ') >= 0) {
+         this.error = true;
+         this.message += " Username cannot contain whitespaces!";
+      }
+      if (this.password.length < 6) {
+         this.error = true;
+         this.message += " Password cannot be shorter than 6 characters!";
+      }  
+      if(this.error == false) {
+         localStorage.setItem(this.userName, this.password);
+         this.authService.login(this.userName, this.password)
+         .subscribe( data => { 
+            console.log("Is Login Success: " + data); 
       
-    //        if(data) this.router.navigate(['/home']); 
-    //   });
+           if(data) this.router.navigate(['/home']); 
+         });
+      }
    }
 }

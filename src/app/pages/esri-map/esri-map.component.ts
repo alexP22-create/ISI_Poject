@@ -108,7 +108,6 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       this.map = new Map(mapProperties);
 
       this.addFeatureLayers();
-      this.addPoint(this.pointCoords[1], this.pointCoords[0]);
 
       // Initialize the MapView
       const mapViewProperties = {
@@ -132,7 +131,6 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       await this.view.when(); // wait for map to load
       console.log("ArcGIS map loaded");
       this.addRouter();
-      this.findPlaces(this.view.center);
       console.log(this.view.center);
       return this.view;
     } catch (error) {
@@ -140,109 +138,90 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     }
   }
 
-//   trailheadsRenderer = {
-//     "type": "simple",
-//     "symbol": {
-//       "type": "picture-marker",
-//       "url": "http://static.arcgis.com/images/Symbols/NPS/npsPictograph_0231b.png",
-//       "width": "18px",
-//       "height": "18px"
-//     }
-//  }
+  touristAttractionsRenderer = {
+    "type": "simple",
+    "symbol": {
+      "type": "picture-marker",
+      "url": "https://cdn4.iconfinder.com/data/icons/country-landmarks-and-destinations/91/Vietnam-512.png",
+      "width": "20px",
+      "height": "20px"
+    }
+    
+ }
+
+ museumsRenderer = {
+  "type": "simple",
+  "symbol": {
+    "type": "picture-marker",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Map_symbol_museum.svg",
+    "width": "20px",
+    "height": "20px"
+  }
+  
+}
+
+churchesRenderer = {
+  "type": "simple",
+  "symbol": {
+    "type": "picture-marker",
+    "url": "https://cdn-icons-png.flaticon.com/512/3891/3891873.png",
+    "width": "20px",
+    "height": "20px"
+  }
+  
+}
+
+
+squaresRenderer = {
+  "type": "simple",
+  "symbol": {
+    "type": "picture-marker",
+    "url": "https://cdn4.iconfinder.com/data/icons/buildings-places-3/24/city_park_square_urban_water_fountain_public_pond-512.png",
+    "width": "20px",
+    "height": "20px"
+  }
+  
+}
+
 
   popupTrailheads = {
     "title": "{NAME}",
-    "content": "<b>Website:</b> <a href={Website}>{Website} </a> <br><b>Cost:</b> {Cost}<br><b>Address:</b> {Address}<br><b>Latitude:</b> {Latitude}<br><b>Longitude:</b> {Longitude}"
+    "content": " <img src={Image} width=200 height=150 class=center /> <br><b>Website:</b> <a href={Website}>{Website} </a> <br><b>Cost:</b> {Cost}<br><b>Address:</b> {Address}<br><b>Latitude:</b> {Latitude}<br><b>Longitude:</b> {Longitude}"
   }
 
   addFeatureLayers() {
     // Trailheads feature layer (points)
-    var trailheadsLayer: __esri.FeatureLayer = new this._FeatureLayer({
+    var touristAttractionLayer: __esri.FeatureLayer = new this._FeatureLayer({
       url:
-        "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/Final_Rome_Layer/FeatureServer",
-      // renderer: this.trailheadsRenderer, //TODO sa adaugam tipul obiectivului si bulina sa fie diferita pt fiecare tip
-      popupTemplate: this.popupTrailheads
+        "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/rome_tourist_atractions_tourist_attractions/FeatureServer/0",
+      popupTemplate: this.popupTrailheads,
+      renderer: this.touristAttractionsRenderer
     });
-
-    this.map.add(trailheadsLayer);
+    var museumsLayer: __esri.FeatureLayer = new this._FeatureLayer({
+      url:
+        "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/rome_tourist_atractions_museums/FeatureServer/0",
+      popupTemplate: this.popupTrailheads,
+      renderer: this.museumsRenderer
+    });
+    var churchesLayer: __esri.FeatureLayer = new this._FeatureLayer({
+      url:
+      "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/rome_tourist_atractions_churches/FeatureServer/0",
+      popupTemplate: this.popupTrailheads,
+      renderer: this.churchesRenderer
+    });
+    var squaresLayer: __esri.FeatureLayer = new this._FeatureLayer({
+      url:
+        "https://services7.arcgis.com/brNnRqgYjnZtNLlC/arcgis/rest/services/rome_tourist_atractions_squares/FeatureServer/0",
+      popupTemplate: this.popupTrailheads,
+      renderer: this.squaresRenderer
+    });
+    this.map.add(touristAttractionLayer);
+    this.map.add(museumsLayer);
+    this.map.add(churchesLayer);
+    this.map.add(squaresLayer);
 
     console.log("feature layers added");
   }
-
-  addPoint(lat: number, lng: number) {
-    this.graphicsLayer = new this._GraphicsLayer();
-    this.map.add(this.graphicsLayer);
-    const point = { //Create a point
-      type: "point",
-      longitude: lng,
-      latitude: lat
-    };
-    const simpleMarkerSymbol = {
-      type: "simple-marker",
-      color: [226, 119, 40],  // Orange
-      outline: {
-        color: [255, 255, 255], // White
-        width: 1
-      }
-    };
-    this.pointGraphic = new this._Graphic({
-      geometry: point,
-      symbol: simpleMarkerSymbol
-    });
-    this.graphicsLayer.add(this.pointGraphic);
-  }
-
-  removePoint() {
-    if (this.pointGraphic != null) {
-      this.graphicsLayer.remove(this.pointGraphic);
-    }
-  }
-
-  findPlaces(pt) {
-    const geocodingServiceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-
-    const params = {
-      categories: ["gas station"],
-      location: pt,  // Paris (2.34602,48.85880)
-      outFields: ["PlaceName", "Place_addr"]
-    }
-
-    this._locator.addressToLocations(geocodingServiceUrl, params).then((results) => {
-      this.showResults(results);
-    });
-  }
-
-  showResults(results) {
-  this.view.popup.close();
-  this.view.graphics.removeAll();
-  results.forEach((result) => {
-    this.view.graphics.add(
-      new this._Graphic({
-        attributes: result.attributes,
-        geometry: result.location,
-        symbol: {
-          type: "simple-marker",
-          color: "black",
-          size: "10px",
-          outline: {
-            color: "#ffffff",
-            width: "2px"
-          }
-        },
-        popupTemplate: {
-          title: "{PlaceName}",
-          content: "{Place_addr}" + "<br><br>" + result.location.x.toFixed(5) + "," + result.location.y.toFixed(5)
-        }
-      }));
-  });
-  if (results.length) {
-    const g = this.view.graphics.getItemAt(0);
-    this.view.popup.open({
-      features: [g],
-      location: g.geometry
-    });
-  }
-}
 
 
   addRouter() {
@@ -322,52 +301,6 @@ export class EsriMapComponent implements OnInit, OnDestroy {
     }
   }
 
-  runTimer() {
-    this.timeoutHandler = setTimeout(() => {
-      // code to execute continuously until the view is closed
-      // ...
-      this.animatePointDemo();
-      this.runTimer();
-    }, 200);
-  }
-
-  animatePointDemo() {
-    this.removePoint();
-    switch (this.dir) {
-      case 0:
-        this.pointCoords[1] += 0.01;
-        break;
-      case 1:
-        this.pointCoords[0] += 0.02;
-        break;
-      case 2:
-        this.pointCoords[1] -= 0.01;
-        break;
-      case 3:
-        this.pointCoords[0] -= 0.02;
-        break;
-    }
-
-    this.count += 1;
-    if (this.count >= 10) {
-      this.count = 0;
-      this.dir += 1;
-      if (this.dir > 3) {
-        this.dir = 0;
-      }
-    }
-
-    this.addPoint(this.pointCoords[1], this.pointCoords[0]);
-  }
-
-  stopTimer() {
-    if (this.timeoutHandler != null) {
-      clearTimeout(this.timeoutHandler);
-      this.timeoutHandler = null;
-    }
-
-  }
-
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     this.initializeMap().then(() => {
@@ -375,7 +308,6 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       console.log("mapView ready: ", this.view.ready);
       this.loaded = this.view.ready;
       this.mapLoadedEvent.emit(true);
-      this.runTimer();
     });
   }
 
@@ -384,6 +316,5 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       // destroy the map view
       this.view.container = null;
     }
-    this.stopTimer();
   }
 }

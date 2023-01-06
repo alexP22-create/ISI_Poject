@@ -1,27 +1,30 @@
 <!-- Page Content -->
 <div class="container">
-    <div class="row">
-       <div class="col-lg-12 text-center" style="padding-top: 20px;">
-          <div class="container box" style="margin-top: 10px; padding-left: 0px; padding-right: 0px;">
-             <div class="row">
-                <div class="col-12" style="text-align: center;">
-                                     <form [formGroup]="formData" (ngSubmit)="onClickSubmit(formData.value)" 
-                                           class="form-signin">
-                                     <h2 class="form-signin-heading">Please register if you don't have an account</h2>
-                                     <label for="inputEmail" class="sr-only">Email address</label>
-                                     <input type="text" id="username" class="form-control" 
-                                           formControlName="userName" placeholder="Username" required autofocus>
-                                     <label for="inputPassword" class="sr-only">Password</label>
-                                     <input type="password" id="inputPassword" class="form-control" 
-                                           formControlName="password" placeholder="Password" required>
-                                     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-                                     <div *ngIf="this.error">
-                                        <h2 class="form-signin-heading">Username already exists!</h2>
-                                     </div>
-                                     </form>
-                </div>
-             </div>
-          </div>
-       </div>
-    </div>
- </div>
+   <div class="row">
+      <div class="col-lg-12 text-center" style="padding-top: 20px;">
+         <div class="container box" style="margin-top: 10px; padding-left: 0px; padding-right: 0px;">
+            <div class="row">
+               <div class="col-12" style="text-align: center;">
+                                    <form [formGroup]="formData" (ngSubmit)="onClickSubmit(formData.value)" 
+                                          class="form-signup" method = "post" id = "my_form">
+                                    <h2 class="form-signin-heading">Please register if you don't have an account</h2>
+                                    <label for="inputUserName" class="sr-only">Username </label>
+                                    <input type="text" id="username" class="form-control" 
+                                          formControlName="userName" placeholder="Username" required autofocus>
+                                    <label for="inputPassword" class="sr-only"> Password </label>
+                                    <input type="password" id="inputPassword" class="form-control" 
+                                          formControlName="password" placeholder="Password" required>
+                                    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+                                    </form>
+                                   <div class="container lognin">
+                                      <p>Already have an account? <a href="/login">Log in</a></p>
+                                   </div>
+                                   <div *ngIf="this.error">
+                                      <p class="form-signin-heading"  style="color:rgb(218, 37, 37);"> {{ this.message }}</p>
+                                   </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
