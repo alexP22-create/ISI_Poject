@@ -11,6 +11,21 @@ import { ExpenseEntryListComponent } from './expense-entry-list/expense-entry-li
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { RegisterComponent } from "./register/register.component";
 
+import { environment } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+
+import { FirebaseService } from './services/database/firebase';
+import { FirebaseMockService } from './services/database/firebase-mock';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 
 @NgModule({
   declarations: [AppComponent, 
@@ -19,9 +34,23 @@ import { RegisterComponent } from "./register/register.component";
     LogoutComponent, 
     ExpenseEntryComponent, 
     ExpenseEntryListComponent, 
-    RegisterComponent],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
-  providers: [],
+    RegisterComponent
+  ],
+  imports: [BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatListModule,
+    FlexLayoutModule,
+    AngularFireModule.initializeApp(environment.firebase, 'AngularDemoArcGIS'),
+    AngularFireDatabaseModule],
+  providers: [
+    FirebaseService,
+    FirebaseMockService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
