@@ -479,8 +479,8 @@ import {
 } from "@angular/core";
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import { Subscription } from "rxjs";
-import { FirebaseService, ITestItem } from "src/app/services/database/firebase";
-import { FirebaseMockService } from "src/app/services/database/firebase-mock";
+// import { FirebaseService, ITestItem } from "src/app/services/database/firebase";
+// import { FirebaseMockService } from "src/app/services/database/firebase-mock";
 import esri = __esri; // Esri TypeScript Types
 
 @Component({
@@ -520,13 +520,13 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   count: number = 0;
   timeoutHandler = null;
 
-  // firebase sync
-  isConnected: boolean = false;
-  subscriptionList: Subscription;
-  subscriptionObj: Subscription;
+  // // firebase sync
+  // isConnected: boolean = false;
+  // subscriptionList: Subscription;
+  // subscriptionObj: Subscription;
 
   constructor(
-    private fbs: FirebaseService
+    //private fbs: FirebaseService
     // private fbs: FirebaseMockService
   ) { }
 
@@ -572,7 +572,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       this.addFeatureLayers();
       this.addGraphicLayers();
 
-      this.addPoint(this.pointCoords[1], this.pointCoords[0], true);
+  //    this.addPoint(this.pointCoords[1], this.pointCoords[0], true);
 
       // Initialize the MapView
       const mapViewProperties = {
@@ -691,123 +691,6 @@ squaresRenderer = {
     console.log("feature layers added");
   }
 
-  addPoint(lat: number, lng: number, register: boolean) {   
-    const point = { //Create a point
-      type: "point",
-      longitude: lng,
-      latitude: lat
-    };
-    const simpleMarkerSymbol = {
-      type: "simple-marker",
-      color: [226, 119, 40],  // Orange
-      outline: {
-        color: [255, 255, 255], // White
-        width: 1
-      }
-    };
-    let pointGraphic: esri.Graphic = new this._Graphic({
-      geometry: point,
-      symbol: simpleMarkerSymbol
-    });
-
-    this.graphicsLayer.add(pointGraphic);
-    if (register) {
-      this.pointGraphic = pointGraphic;
-    }
-  }
-
-  removePoint() {
-    if (this.pointGraphic != null) {
-      this.graphicsLayer.remove(this.pointGraphic);
-    }
-  }
-
-  runTimer() {
-    this.timeoutHandler = setTimeout(() => {
-      // code to execute continuously until the view is closed
-      // ...
-
-      this.animatePointDemo();
-      this.runTimer();
-    }, 200);
-  }
-
-  animatePointDemo() {
-    this.removePoint();
-    switch (this.dir) {
-      case 0:
-        this.pointCoords[1] += 0.01;
-        break;
-      case 1:
-        this.pointCoords[0] += 0.02;
-        break;
-      case 2:
-        this.pointCoords[1] -= 0.01;
-        break;
-      case 3:
-        this.pointCoords[0] -= 0.02;
-        break;
-    }
-
-    this.count += 1;
-    if (this.count >= 10) {
-      this.count = 0;
-      this.dir += 1;
-      if (this.dir > 3) {
-        this.dir = 0;
-      }
-    }
-
-    this.fbs.syncPointItem(this.pointCoords[1], this.pointCoords[0]);
-    this.addPoint(this.pointCoords[1], this.pointCoords[0], true);
-  }
-
-  stopTimer() {
-    if (this.timeoutHandler != null) {
-      clearTimeout(this.timeoutHandler);
-      this.timeoutHandler = null;
-    }
-  }
-
-  connectFirebase() {
-    if (this.isConnected) {
-      return;
-    }
-    this.isConnected = true;
-    this.fbs.connectToDatabase();
-    this.subscriptionList = this.fbs.getChangeFeedList().subscribe((items: ITestItem[]) => {
-      console.log("got new items from list: ", items);
-      this.graphicsLayer.removeAll();
-      for (let item of items) {
-        this.addPoint(item.lat, item.lng, false);
-      }
-    });
-    this.subscriptionObj = this.fbs.getChangeFeedObj().subscribe((stat: ITestItem[]) => {
-      console.log("item updated from object: ", stat);
-    });
-  }
-
-  addPointItem() {
-    console.log("Map center: " + this.view.center.latitude + ", " + this.view.center.longitude);
-    this.fbs.addPointItem(this.view.center.latitude, this.view.center.longitude);
-
-  }
-
-  syncPointItem() {
-    console.log("Map COORD: " +this.pointCoords[1] + ", " + this.pointCoords[0]);
-    this.fbs.syncPointItem(10, 100);
-    // this.fbs.syncPointItem(this.pointCoords[1], this.pointCoords[0]);
-  }
-
-  disconnectFirebase() {
-    if (this.subscriptionList != null) {
-      this.subscriptionList.unsubscribe();
-    }
-    if (this.subscriptionObj != null) {
-      this.subscriptionObj.unsubscribe();
-    }
-  }
-
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     console.log("initializing map");
@@ -815,7 +698,6 @@ squaresRenderer = {
       // The map has been initialized
       console.log("mapView ready: ", this.view.ready);
       this.loaded = this.view.ready;
-      this.runTimer();
     });
   }
 
@@ -824,7 +706,5 @@ squaresRenderer = {
       // destroy the map view
       this.view.container = null;
     }
-    this.stopTimer();
-    this.disconnectFirebase();
   }
 }

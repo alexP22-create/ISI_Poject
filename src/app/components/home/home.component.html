@@ -1,0 +1,15 @@
+<!--//TODO bara de nagivatie?> <-->
+  <div class="title">
+    <ng-container *ngIf="user$ | async as user">
+      <button class="button" routerLink="/profile">Your profile</button>
+    </ng-container>
+    <button class="button" routerLink="/map">Rome's Map</button>
+    <button (click)="logout()" class="button">Logout</button>
+    
+    <ng-container *ngIf="user$ | async as user">
+        <h1 style="text-align:center">Welcome to the home page, {{user.displayName}}!</h1>
+    </ng-container>
+
+    <img width="1000" height="662" alt="RomeImg" class="center"
+        src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1776&q=80" />
+</div>
