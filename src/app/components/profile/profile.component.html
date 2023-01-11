@@ -1,3 +1,4 @@
+
 <div
   class="form-container mat-elevation-z5 text-center"
   *ngIf="user$ | async as user"
@@ -17,26 +18,8 @@
   <input #inputField hidden type="file" (change)="uploadFile($event, user)" />
 
   <form class="margin-top" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-    <div class="row">
-      <mat-form-field appearance="fill">
-        <input
-          type="text"
-          matInput
-          formControlName="firstName"
-          placeholder="First Name"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <input
-          type="text"
-          matInput
-          formControlName="lastName"
-          placeholder="Last Name"
-        />
-      </mat-form-field>
-    </div>
-
-    <div class="row">
+    <div>
+      Name:
       <mat-form-field appearance="fill">
         <input
           type="text"
@@ -45,6 +28,18 @@
           placeholder="Display Name"
         />
       </mat-form-field>
+      <br>
+      Email:
+      <mat-form-field appearance="fill">
+        <input
+          type="text"
+          matInput
+          formControlName="email"
+          placeholder="Email address"
+        />
+      </mat-form-field>
+      <br>
+      Phone number:
       <mat-form-field appearance="fill">
         <input
           type="number"
@@ -53,7 +48,8 @@
           placeholder="Phone"
         />
       </mat-form-field>
-    </div>
+      <br>
+      Address:
     <mat-form-field appearance="fill">
       <input
         type="text"
@@ -62,6 +58,7 @@
         placeholder="Address"
       />
     </mat-form-field>
+  </div>
 
     <button type="submit" class="margin-top" mat-raised-button class="button">
       Save

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { user } from '@angular/fire/auth';
 import { FormControl, FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { switchMap, tap } from 'rxjs';
+import { switchMap, tap, concatMap } from 'rxjs';
 import { ProfileUser } from 'src/app/models/user';
 import { ImageUploadService } from 'src/app/services/image-upload.service';
 import { UsersService } from 'src/app/services/users.service';
@@ -19,6 +20,7 @@ export class ProfileComponent implements OnInit {
   profileForm = this.fb.group({
     uid: [''],
     displayName: [''],
+    email: [''],
     firstName: [''],
     lastName: [''],
     phone: [''],
@@ -40,23 +42,23 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  uploadFile(event: any, { uid }: ProfileUser) {
+  uploadFile(event: any, user: ProfileUser) {
     this.imageUploadService
-      .uploadImage(event.target.files[0], `images/profile/${uid}`)
+      .uploadImage(event.target.files[0], `images/profile/${user.uid}`)
       .pipe(
         this.toast.observe({
           loading: 'Uploading profile image...',
           success: 'Image uploaded successfully',
           error: 'There was an error in uploading the image',
         }),
-        switchMap((photoURL) =>
+        concatMap((photoURL) =>
           this.usersService.updateUser({
-            uid,
+            uid: user.uid,
             photoURL,
           })
         )
       )
-      .subscribe();
+        .subscribe();
   }
 
   saveProfile() {
