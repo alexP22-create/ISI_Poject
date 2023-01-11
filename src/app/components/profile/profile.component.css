@@ -4,6 +4,14 @@
   margin: auto;
 }
 
+
+h1{
+
+  text-align: center;
+  
+  }
+
+
 .profile-image > img {
   border-radius: 100%;
   object-fit: cover;
@@ -27,13 +35,13 @@
 
 
 .button {
-  background-color: white;
+  background-color: #103a88;
   border: 2px solid #103a88;
-  color: #103a88;
-  padding: 12px 26px;
+  color: white;
+  /* padding: 12px 26px; */
   text-align: center;
   text-decoration: none;
-  border-radius: 12px;
+  /* border-radius: 12px; */
   display: inline-block;
   font-size: 16px;
   position: relative;
@@ -43,25 +51,121 @@
   display: inline-block;
 }
 
-/* TODO: sa ma uit in users.ts si in users.service.ts sa inteleg cum functioneaza profile */
-/* .mat-form-field input {
-  border: 2px solid black;
-  background-color: rgb(220, 220, 217) !important;
-  height: 22px;
-  transition: height ease-in-out 400ms;
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.mat-form-field input:focus {
-  border: 2px solid black;
-  background-color: rgb(220, 220, 217) !important;
-  height: 25px;
-  transition: height ease-in-out 400ms;
-  text-align: center;
-} */
 
 .center {
   margin: 0;
   position: absolute;
   left: 43%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+body{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.bg-image {
+  /* The image used */
+  background-image: url("https://images.unsplash.com/photo-1531572753322-ad063cecc140?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1776&q=80");
+  
+  /* Add the blur effect */
+  filter: blur(7px);
+  -webkit-filter: blur(7px);
+  
+  /* Full height */
+  height: 700px;
+  width: 1400px; 
+  
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Position text in the middle of the page/image */
+.bg-text {
+  color: black;
+  font-weight: bold;
+  position: absolute;
+  top: 20%;
+  left: 43%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 80%;
+  padding: 20px;
 }

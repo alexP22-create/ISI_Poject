@@ -1,84 +1,41 @@
-<!-- The content below is only a placeholder and can be replaced. -->
-
-
-<!-- <app-esri-map [center]="mapCenter" [basemap]="basemapType" [zoom]="mapZoomLevel"
-  (mapLoadedEvent)="mapLoadedEvent($event)">
-</app-esri-map> -->
-
-
-<!-- <div class="collapse navbar-collapse" id="navbarResponsive">
-  <ul class="navbar-nav ml-auto">
-     <li class="nav-item active">
-        <a class="nav-link" href="#">Home
-           <span class="sr-only" routerLink="/"></span>
-
-        </a>
-     </li>
-     <li class="nav-item">
-                 <div *ngIf="isUserLoggedIn; else isLogOut">
-                       <a class="nav-link" routerLink="/logout">Logout</a>
-                       <li class="nav-item"><a class="nav-link" routerLink="home">Home</a></li>
-                       <li class="nav-item"><a class="nav-link" routerLink="map">Map</a></li>
-                 </div>
-
-                 <ng-template #isLogOut>
-                             <a class="nav-link" routerLink="/login">Login</a>
-                 </ng-template>
-     </li>
-  </ul>
-</div> -->
-
-<!-- <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
-  <div class="container">
-    <a class="navbar-brand">Angular Router</a>
-    <ul class="nav navbar-nav" routerLinkActive="active">
-      <li class="nav-item">
-        <div *ngIf="this.authService.isUserLoggedIn; else isLogOut">
-              <a class="nav-link" routerLink="/logout">Logout</a>
-              <li class="nav-item"><a class="nav-link" routerLink="map">Map</a></li>
-        </div>
-
-        <ng-template #isLogOut>
-                    <li><a class="nav-link" routerLink="/login">Login</a></li>
-                    <li><a class="nav-link" routerLink="/register">Register</a></li>
-        </ng-template>
-      </li>
-      <li class="nav-item"><a class="nav-link" routerLink="home">Home</a></li>
-    </ul>
-  </div>
-</nav>
-
-<div class="container">
-  <router-outlet></router-outlet>
-</div> -->
 
 <mat-toolbar color="primary">
   <ng-container *ngIf="user$ | async as user; else loginButton">
-    <button mat-button [matMenuTriggerFor]="userMenu" class="button">
-      <img
-        width="30"
-        height="30"
-        class="profile-image-toolbar"
-        [src]="user.photoURL ?? 'assets/images/image-placeholder.png'"
-      />
-      {{ user.displayName }}
-    </button>
+    <div *ngIf="router.url === '/profile'">
+      <button routerLink="/profile" class="pressed-button">Profile</button>
+    </div>
+    <div *ngIf="router.url !== '/profile'">
+      <button routerLink="/profile" class="button">Profile</button>
+    </div>
+
+    &nbsp;&nbsp;
+
+    <div *ngIf="router.url === '/map'">
+      <button  class="pressed-button" routerLink="/map">Rome's Map</button>
+    </div>
+    <div *ngIf="router.url !== '/map'">
+      <button  class="button" routerLink="/map">Rome's Map</button>
+    </div>
+    &nbsp;&nbsp;
+
+    <div *ngIf="router.url === '/home'">
+      <button  class="pressed-button" routerLink="/home">Home</button>
+    </div>
+    <div *ngIf="router.url !== '/home'">
+      <button  class="button" routerLink="/home">Home</button>
+    </div>
+    
+    &nbsp;&nbsp;
+    <button (click)="logout()" class="button"> Log out </button>
   </ng-container>
     <ng-template #loginButton>
       <div *ngIf="router.url !== '/sign-up' && router.url !== '/login'">
         <button class="button" routerLink="/sign-up"> Sign Up! </button>
+        &nbsp;&nbsp;
         <button class="button" routerLink="/login"> Log in! </button>
+        &nbsp;&nbsp;
       </div>
     </ng-template>
-
-    <mat-menu #userMenu>
-      <button routerLink="/profile" class="button">Profile</button>
-      <br>
-      <button  class="button" routerLink="/map">Rome's Map</button>
-      <br>
-      <button (click)="logout()" class="button"> Log out </button>
-    </mat-menu>
-    
 </mat-toolbar>
 
 <div class="content">

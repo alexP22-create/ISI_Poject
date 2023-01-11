@@ -1,67 +1,71 @@
+<body>
+<div class="bg-image">
+</div>
 
-<div
+<div class="bg-text">
+  <div
   class="form-container mat-elevation-z5 text-center"
   *ngIf="user$ | async as user"
 >
-  <h1>Update Profile</h1>
-  <div class="profile-image">
-    <img
-      width="120"
-      height="120"
-      class="margin-top mat-elevation-z1"
-      [src]="user.photoURL ?? '/assets/images/image-placeholder.png'"
-    />
-    <button mat-mini-fab (click)="inputField.click()"> <!--change style-->
-      <mat-icon>edit</mat-icon>
-    </button>
+  <div class="title">
+    <h1 class="center" style="color:white;">Update Profile</h1>
   </div>
-  <input #inputField hidden type="file" (change)="uploadFile($event, user)" />
+  <br>
+  <br>
+  <br>
+<div class="center">
+  <div class="container">
+    <form  [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="row">
+          <div class="col-25">
+            <label for="name">Name:</label>
+          </div>
+          <div class="col-75">
+              <input type="text" id="lname" name="lastname" matInput
+              formControlName="displayName" placeholder="Your name..">
+          </div>
+        </div>
 
-  <form class="margin-top" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-    <div>
-      Name:
-      <mat-form-field appearance="fill">
-        <input
-          type="text"
-          matInput
-          formControlName="displayName"
-          placeholder="Display Name"
-        />
-      </mat-form-field>
-      <br>
-      Email:
-      <mat-form-field appearance="fill">
-        <input
-          type="text"
-          matInput
-          formControlName="email"
-          placeholder="Email address"
-        />
-      </mat-form-field>
-      <br>
-      Phone number:
-      <mat-form-field appearance="fill">
-        <input
-          type="number"
-          matInput
-          formControlName="phone"
-          placeholder="Phone"
-        />
-      </mat-form-field>
-      <br>
-      Address:
-    <mat-form-field appearance="fill">
-      <input
-        type="text"
-        matInput
-        formControlName="address"
-        placeholder="Address"
-      />
-    </mat-form-field>
+        <div class="row">
+          <div class="col-25">
+            <label for="email">Email:</label>
+          </div>
+          <div class="col-75">
+              <input type="text" id="email" name="email" matInput
+              formControlName="email" placeholder="Your email..">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-25">
+            <label for="phone">Phone number:</label>
+          </div>
+          <div class="col-75">
+              <input type="text" id="phone" name="phone" matInput
+              formControlName="phone" placeholder="Your phone number..">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-25">
+            <label for="address">Address:</label>
+          </div>
+          <div class="col-75">
+              <input type="text" id="address" name="address" matInput
+              formControlName="address" placeholder="Your address..">
+          </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="row">
+          <button type="submit"  mat-raised-button class="button">
+            Save
+          </button>
+        </div>
+    </form>
   </div>
-
-    <button type="submit" class="margin-top" mat-raised-button class="button">
-      Save
-    </button>
-  </form>
 </div>
+</div>
+</div>
+</body>
