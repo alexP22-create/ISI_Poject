@@ -53,9 +53,8 @@
 </div> -->
 
 <mat-toolbar color="primary">
-  <!-- Sign Up Flow with Firebase -->
-  <!-- <ng-container *ngIf="user$ | async as user; else loginButton">
-    <button mat-button [matMenuTriggerFor]="userMenu">
+  <ng-container *ngIf="user$ | async as user; else loginButton">
+    <button mat-button [matMenuTriggerFor]="userMenu" class="button">
       <img
         width="30"
         height="30"
@@ -63,28 +62,25 @@
         [src]="user.photoURL ?? 'assets/images/image-placeholder.png'"
       />
       {{ user.displayName }}
-      <mat-icon>expand_more</mat-icon>
     </button>
-  </ng-container> -->
-  <!-- <ng-template #loginButton>
-    <button mat-button routerLink="login">
-      <mat-icon>login</mat-icon>
-      Login -->
-    <!-- </button>
-  </ng-template> -->
+  </ng-container>
+    <ng-template #loginButton>
+      <div *ngIf="router.url !== '/sign-up' && router.url !== '/login'">
+        <button class="button" routerLink="/sign-up"> Sign Up! </button>
+        <button class="button" routerLink="/login"> Log in! </button>
+      </div>
+    </ng-template>
+
+    <mat-menu #userMenu>
+      <button routerLink="/profile" class="button">Profile</button>
+      <br>
+      <button  class="button" routerLink="/map">Rome's Map</button>
+      <br>
+      <button (click)="logout()" class="button"> Log out </button>
+    </mat-menu>
+    
 </mat-toolbar>
 
 <div class="content">
   <router-outlet></router-outlet>
 </div>
-
-<mat-menu #userMenu="matMenu">
-  <button mat-menu-item routerLink="/profile">
-    <mat-icon>account_circle</mat-icon>
-    Profile
-  </button>
-  <button mat-menu-item (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Logout
-  </button>
-</mat-menu>

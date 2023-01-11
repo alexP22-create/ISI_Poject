@@ -1,10 +1,10 @@
 <!--//TODO bara de nagivatie?> <-->
   <div class="title">
-    <ng-container *ngIf="user$ | async as user">
+    <!-- <ng-container *ngIf="user$ | async as user">
       <button class="button" routerLink="/profile">Your profile</button>
     </ng-container>
     <button class="button" routerLink="/map">Rome's Map</button>
-    <button (click)="logout()" class="button">Logout</button>
+    <button (click)="logout()" class="button">Logout</button> -->
     
     <ng-container *ngIf="user$ | async as user">
         <h1 style="text-align:center">Welcome to the home page, {{user.displayName}}!</h1>
