@@ -4,13 +4,16 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
+  Input,
+  Output,
+  EventEmitter,
   OnDestroy
 } from "@angular/core";
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import * as Point from "esri/geometry/Point";
 import * as View from "esri/views/View";
 import { Subscription } from "rxjs";
-// import { FirebaseService, ITestItem } from "src/app/services/database/firebase";
+import { FirebaseService, ITestItem } from "src/app/services/database/firebase";
 // import { FirebaseMockService } from "src/app/services/database/firebase-mock";
 import esri = __esri; // Esri TypeScript Types
 
@@ -20,6 +23,7 @@ import esri = __esri; // Esri TypeScript Types
   styleUrls: ["./esri-map.component.scss"]
 })
 export class EsriMapComponent implements OnInit, OnDestroy {
+  @Output() mapLoadedEvent = new EventEmitter<boolean>();
   // The <div> where we will place the map
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
 
@@ -55,15 +59,18 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   timeoutHandler = null;
   destination: boolean = false;
 
-  // // firebase sync
-  // isConnected: boolean = false;
-  // subscriptionList: Subscription;
-  // subscriptionObj: Subscription;
+  // firebase sync
+  isConnected: boolean = false;
+  subscriptionList: Subscription;
+  subscriptionObj: Subscription;
+  addPointMode: boolean = false;
+  message = "Enter Add Tourist Attraction Mode";
 
   constructor(
-    //private fbs: FirebaseService
+    private fbs: FirebaseService
     // private fbs: FirebaseMockService
   ) { }
+  
 
   async initializeMap() {
     try {
@@ -89,7 +96,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
         "esri/rest/support/ServiceAreaParameters"
       ]);
 
-      esriConfig.apiKey = "AAPKf969cbae8c8148c3937ebf320cc40c901X6A3d70ocPhfE3Sn6YjpP8kc58Skmb9PaQcJ2CQoJvW3DffxeIFpYVhDPoYL_72";
+      esriConfig.apiKey = "AAPKc51195b9373b4eeaa68102ca10b8020762XGYkRwQajtskp7Op3PU7z5kUArWiVzWKrrYVQ8vB76ulZmPpy-It8k96b5SIfD";
 
       this._Map = Map;
       this._MapView = MapView;
@@ -302,6 +309,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       //this.addServiceArea();
 
       await this.view.when(); // wait for map to load
+      this.addPointItem();
       console.log("ArcGIS map loaded");
       console.log("Map center: " + this.view.center.latitude + ", " + this.view.center.longitude);
       return this.view;
@@ -465,6 +473,81 @@ squaresRenderer = {
 
       }
   }
+
+    addPoint(lat: number, lng: number, register: boolean) {   
+    const point = { //Create a point
+      type: "point",
+      longitude: lng,
+      latitude: lat
+    };
+    const simpleMarkerSymbol = {
+      type: "simple-marker",
+      color: [226, 119, 40],  // Orange
+      outline: {
+        color: [255, 255, 255], // White
+        width: 1
+      },
+      text: "point"
+    };
+    let pointGraphic: esri.Graphic = new this._Graphic({
+      geometry: point,
+      symbol: simpleMarkerSymbol,
+    });
+
+    this.graphicsLayer.add(pointGraphic);
+    if (register) {
+      this.pointGraphic = pointGraphic;
+    }
+  }
+
+  
+  connectFirebase() {
+    if (this.isConnected) {
+      return;
+    }
+    this.isConnected = true;
+    this.fbs.connectToDatabase();
+    this.subscriptionList = this.fbs.getChangeFeedList().subscribe((items: ITestItem[]) => {
+      console.log("got new items from list: ", items);
+      this.graphicsLayer.removeAll();
+      for (let item of items) {
+        this.addPoint(item.lat, item.lng, false);
+      }
+    });
+    this.subscriptionObj = this.fbs.getChangeFeedObj().subscribe((stat: ITestItem[]) => {
+      console.log("item updated from object: ", stat);
+    });
+  }
+
+    disconnectFirebase() {
+    if (this.subscriptionList != null) {
+      this.subscriptionList.unsubscribe();
+    }
+    if (this.subscriptionObj != null) {
+      this.subscriptionObj.unsubscribe();
+    }
+  }
+
+  
+
+  addPointItem() {
+      this.view.on("click", (event) => {
+        console.log("point clicked: ", event.mapPoint.latitude, event.mapPoint.longitude);
+        if (this.addPointMode == true) {
+          this.fbs.addPointItem(event.mapPoint.latitude, event.mapPoint.longitude);
+        }
+      });
+  }
+
+  changeAddPointMode() {
+    this.addPointMode = !this.addPointMode;
+    if (this.addPointMode == true) {
+      this.message = "Exit Add Tourist Attraction Mode";
+    } else {
+      this.message = "Enter Add Tourist Attraction Mode";
+    }
+  }
+
   ngOnInit() {
     // Initialize MapView and return an instance of MapView
     console.log("initializing map");
@@ -473,6 +556,7 @@ squaresRenderer = {
       console.log("mapView ready: ", this.view.ready);
       this.loaded = this.view.ready;
     });
+    this.connectFirebase();
   }
 
   ngOnDestroy() {
@@ -480,5 +564,6 @@ squaresRenderer = {
       // destroy the map view
       this.view.container = null;
     }
+    this.disconnectFirebase()
   }
 }
