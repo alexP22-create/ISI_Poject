@@ -20,7 +20,9 @@ export class AppComponent {
 
   constructor(public authService: AuthService,
     public usersService: UsersService,
-    public router: Router) {}
+    public router: Router) {
+      
+    }
   
 //   ngOnInit() {
 //     let storeData = localStorage.getItem("isUserLoggedIn");

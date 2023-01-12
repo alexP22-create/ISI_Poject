@@ -82,6 +82,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ProfileComponent } from './components/profile/profile.component';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 
+import { FirebaseService } from './services/database/firebase';
+import { FirebaseMockService } from './services/database/firebase-mock';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,8 +118,17 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
     provideStorage(() => getStorage()),
     HotToastModule.forRoot(),
     MatMenuModule,
+    MatTabsModule,
+    MatDividerModule,
+    MatListModule,
+    FlexLayoutModule,
+    AngularFireModule.initializeApp(environment.firebase, 'AngularDemoArcGIS'),
+    AngularFireDatabaseModule
   ],
-  providers: [],
+  providers: [
+    FirebaseService,
+    FirebaseMockService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
