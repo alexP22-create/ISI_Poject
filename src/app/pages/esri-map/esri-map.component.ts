@@ -1,3 +1,4 @@
+import { ThisReceiver } from "@angular/compiler";
 import {
   Component,
   OnInit,
@@ -57,11 +58,14 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   isConnected: boolean = false;
   subscriptionList: Subscription;
   subscriptionObj: Subscription;
+  addPointMode: boolean = false;
+  message = "Enter Add Tourist Attraction Mode";
 
   constructor(
     private fbs: FirebaseService
     // private fbs: FirebaseMockService
   ) { }
+  
 
   async initializeMap() {
     try {
@@ -482,11 +486,12 @@ squaresRenderer = {
       outline: {
         color: [255, 255, 255], // White
         width: 1
-      }
+      },
+      text: "point"
     };
     let pointGraphic: esri.Graphic = new this._Graphic({
       geometry: point,
-      symbol: simpleMarkerSymbol
+      symbol: simpleMarkerSymbol,
     });
 
     this.graphicsLayer.add(pointGraphic);
@@ -526,10 +531,21 @@ squaresRenderer = {
   
 
   addPointItem() {
-    this.view.on("click", (event) => {
-      console.log("point clicked: ", event.mapPoint.latitude, event.mapPoint.longitude);
-      this.fbs.addPointItem(event.mapPoint.latitude, event.mapPoint.longitude);
-    });
+      this.view.on("click", (event) => {
+        console.log("point clicked: ", event.mapPoint.latitude, event.mapPoint.longitude);
+        if (this.addPointMode == true) {
+          this.fbs.addPointItem(event.mapPoint.latitude, event.mapPoint.longitude);
+        }
+      });
+  }
+
+  changeAddPointMode() {
+    this.addPointMode = !this.addPointMode;
+    if (this.addPointMode == true) {
+      this.message = "Exit Add Tourist Attraction Mode";
+    } else {
+      this.message = "Enter Add Tourist Attraction Mode";
+    }
   }
 
   ngOnInit() {

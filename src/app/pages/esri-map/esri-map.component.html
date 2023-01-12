@@ -1,1 +1,22 @@
-<div #mapViewNode></div>
+<!-- <div fxLayout="row">
+    <div fxFlex="20%">
+        <ng-container *ngIf="addPointMode; else noAddPointMode">
+            <button mat-button mat-button color="primary" class="full-w" (click)="setAddPointModeFalse()">Exit Add Tourist Attraction Mode</button>
+        </ng-container>
+        <ng-template #noAddPointMode>
+                <button mat-button mat-button color="primary" class="full-w" (click)="setAddPointModeTrue()">Enter Add Tourist Attraction Mode</button>
+        </ng-template>
+    </div>
+    <div fxFlex="80%">
+        <div #mapViewNode></div>
+    </div>
+</div> -->
+
+<div fxLayout="row">
+    <div fxFlex="20%" fxLayout="column">
+        <button mat-button mat-button class="full-w button" (click)="changeAddPointMode()"> {{message}} </button>
+    </div>
+    <div fxFlex="80%">
+        <div #mapViewNode></div>
+    </div>
+</div>
