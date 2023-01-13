@@ -9,16 +9,18 @@ import {
   EventEmitter,
   OnDestroy
 } from "@angular/core";
+import { user } from "@angular/fire/auth";
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import * as Point from "esri/geometry/Point";
 import * as View from "esri/views/View";
 
 import { Subscription } from "rxjs";
+import { ProfileUser } from "src/app/models/user";
 import { FirebaseService, ITestItem } from "src/app/services/database/firebase";
 // import { FirebaseMockService } from "src/app/services/database/firebase-mock";
 import { UsersService } from 'src/app/services/users.service';
 import esri = __esri; // Esri TypeScript Types
-
+let profileUser;
 @Component({
   selector: "app-esri-map",
   templateUrl: "./esri-map.component.html",
@@ -65,13 +67,13 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   locationAdded: boolean = false;
   start: any;
   end: any;
+
   // firebase sync
   isConnected: boolean = false;
   subscriptionList: Subscription;
   subscriptionObj: Subscription;
   addPointMode: boolean = false;
-  message = "Enter Add Tourist Attraction Mode";
-
+  message = "Enter Add Tourist Attraction Mode";  
   // layers
 touristAttractionLayer;
 museumsLayer;
@@ -153,20 +155,6 @@ squaresLayer;
         
       });      
       
-      //search a location
-      const searchbyAddress = new SearchFunction({  //Add Search widget
-        view: this.view
-      });
-      this.view.ui.add(searchbyAddress, "top-right");
-      searchbyAddress.on('search-complete', function (result) {
-        const mp = result.results[0].results[0].feature.geometry;
-        let lat = mp.latitude;
-			  let longt = mp.longitude;
-        let pointVar = new Point({
-          latitude:lat,
-          longitude:longt
-      });});
-      
       // Routing
       //caseta punct de plecare
       const searchStart = new SearchFunction({  //Add Search widget
@@ -182,13 +170,8 @@ squaresLayer;
       this.view.ui.add(searchEnd, "top-right");
 
       // search function
-<<<<<<< HEAD
       const searchSimple = new SearchFunction({  //Add Search widget
         view: this.view
-=======
-      const search = new SearchFunction({  //Add Search widget
-        view: this.view,
->>>>>>> 11d0a5487cfcae6496fa7eb4c36993da8220e785
       });
       this.view.ui.add(searchSimple, "top-right");
 
@@ -298,6 +281,9 @@ squaresLayer;
         }
       })
       
+      searchStart.on('delete', (result) => {
+        console.log("meow");
+      });
       searchEnd.on('search-complete', (result) => {
         const mp = result.results[0].results[0].feature.geometry;
         let lat = mp.latitude;
@@ -566,9 +552,9 @@ squaresRenderer = {
       },
       text: "point"
     };
-
+    this.user$.subscribe(event => profileUser = event);
     const template = {
-      "title": "Suggested location by other users",
+      "title": "Suggested location by " + profileUser.displayName,
       "content": "<b>Latitude: </b>" + lat + "lat <br><b>Longitude: </b>" + lng,
     }
 
