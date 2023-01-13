@@ -144,12 +144,26 @@ export class EsriMapComponent implements OnInit, OnDestroy {
         let point = this.view.toMap({ x: event.x, y: event.y });
         console.log("map moved: ", point.longitude, point.latitude);
         
+      });      
+      
+      //search a location
+      const searchbyAddress = new SearchFunction({  //Add Search widget
+        view: this.view
       });
+      this.view.ui.add(searchbyAddress, "top-right");
+      searchbyAddress.on('search-complete', function (result) {
+        const mp = result.results[0].results[0].feature.geometry;
+        let lat = mp.latitude;
+			  let longt = mp.longitude;
+        let pointVar = new Point({
+          latitude:lat,
+          longitude:longt
+      });});
       
 
       // search function
       const search = new SearchFunction({  //Add Search widget
-        view: this.view
+        view: this.view,
       });
       this.view.ui.add(search, "top-right");
       search.on('search-complete', function (result) {
@@ -249,7 +263,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       });
       
       
-      //search by categories
+     // search by categories
       // const places = ["Choose a destination type...", "Museum", "Plaza", "Church", "Hill", "Others"];
       // const select = document.createElement('select');
       // select.setAttribute("class", "esri-widget esri-select");
@@ -262,7 +276,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       // });
       // this.view.ui.add(select, "top-right");
       // const locatorUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-      // Find places and add them to the map
+  //     Find places and add them to the map
   //  function findPlaces(category, pt) {
   //   locator.addressToLocations(locatorUrl, {
   //     location: pt,
