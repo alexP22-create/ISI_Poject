@@ -61,8 +61,10 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   dir: number = 0;
   count: number = 0;
   timeoutHandler = null;
-  destination: boolean = false;
-
+  destinationAdded: boolean = false;
+  locationAdded: boolean = false;
+  start: any;
+  end: any;
   // firebase sync
   isConnected: boolean = false;
   subscriptionList: Subscription;
@@ -121,7 +123,8 @@ squaresLayer;
       this._locator = locator;
       this._ServiceArea = serviceArea;
       this._ServiceAreaParameters = ServiceAreaParameters;
-      this.destination = false;
+      this.destinationAdded = false;
+      this.locationAdded = false;
       // Configure the Map
       const mapProperties = {
         basemap: this.basemap
@@ -142,7 +145,6 @@ squaresLayer;
         map: this.map
       };
       this.view = new MapView(mapViewProperties);
-
       // Fires `pointer-move` event when user clicks on "Shift"
       // key and moves the pointer on the view.
       this.view.on('pointer-move', ["Shift"], (event) => {
@@ -151,23 +153,29 @@ squaresLayer;
         
       });
       
+      // Routing
+      //caseta punct de plecare
+      const searchStart = new SearchFunction({  //Add Search widget
+        view: this.view,
+        allPlaceholder: "Choose your starting location"
+      });
+      this.view.ui.add(searchStart, "top-right");
+      //caseta destinatie
+      const searchEnd = new SearchFunction({  //Add Search widget
+        view: this.view,
+        allPlaceholder: "Choose your destination"
+      });
+      this.view.ui.add(searchEnd, "top-right");
 
       // search function
-      const search = new SearchFunction({  //Add Search widget
+      const searchSimple = new SearchFunction({  //Add Search widget
         view: this.view
       });
-      this.view.ui.add(search, "top-right");
-      search.on('search-complete', function (result) {
-        const mp = result.results[0].results[0].feature.geometry;
-        let lat = mp.latitude;
-			  let longt = mp.longitude;
-        let pointVar = new Point({
-          latitude:lat,
-          longitude:longt
-      });
+      this.view.ui.add(searchSimple, "top-right");
+
       // console.log("aaa"+this.view.graphics.length);
-      var addGraphicRoute = (type: any, point: any) => {
-        // console.log("Intra in addGraphicRoute");
+      var addGraphicRoute = (type: any, point: any, where:any) => {
+        console.log("Intra in addGraphicRoute");
         const graphic = new Graphic({
           symbol: {
             type: "simple-marker",
@@ -177,11 +185,16 @@ squaresLayer;
           geometry: point
         });
         // console.log("Incearca sa adauge");
-        this.view.graphics.add(graphic);
+        if (where == "start")
+          this.start=graphic;
+        else if (where == "end")
+          this.end = graphic;
+        // this.view.graphics.add(graphic);
         // console.log("A adaugat");
       }
       var getRoute = () => {
-        // console.log("Intra in getRoute");
+        console.log("Intra in get Route");
+        console.log(this.view.graphics.toArray());
         const routeParams = new RouteParameters({
           stops: new FeatureSet({
             features: this.view.graphics.toArray()
@@ -240,19 +253,56 @@ squaresLayer;
           console.log(error);
         });
       }
-      // console.log(this.destination);
-      if (this.destination == false || this.destination == undefined) {
-        this.view.graphics.removeAll();
-        addGraphicRoute("origin", pointVar);
-        this.destination = true;
-      }
-      else {
-        addGraphicRoute("destination", pointVar);
-        getRoute();
-        this.destination = false;
-      }
-      });
       
+      searchStart.on('search-complete', (result) => {
+        const mp = result.results[0].results[0].feature.geometry;
+        let lat = mp.latitude;
+			  let longt = mp.longitude;
+        let pointVar = new Point({
+          latitude:lat,
+          longitude:longt
+      });
+        // this.view.graphics.removeAll();
+        this.locationAdded = true;
+        addGraphicRoute("origin", pointVar,"start");
+        // console.log("A adaugat punct de plecare");
+        console.log(this.view.graphics.toArray());
+        console.log(this.locationAdded);
+        console.log(this.destinationAdded);
+
+        // check if routing is possible
+        if (this.locationAdded && this.destinationAdded) {
+          this.view.graphics.removeAll();
+          this.view.graphics.add(this.start);
+          this.view.graphics.add(this.end);
+          getRoute();
+        }
+      })
+      
+      searchEnd.on('search-complete', (result) => {
+        const mp = result.results[0].results[0].feature.geometry;
+        let lat = mp.latitude;
+			  let longt = mp.longitude;
+        let pointVar = new Point({
+          latitude:lat,
+          longitude:longt
+      });
+        // this.view.graphics.removeAll();
+        addGraphicRoute("destination", pointVar,"end");
+        this.destinationAdded = true;
+        // console.log("A adaugat destinatie");
+        console.log(this.view.graphics.toArray());
+        console.log(this.locationAdded);
+        console.log(this.destinationAdded);
+
+        // to do
+        if (this.locationAdded && this.destinationAdded) {
+          this.view.graphics.removeAll();
+          this.view.graphics.add(this.start);
+          this.view.graphics.add(this.end);
+          getRoute();
+        }
+      })
       
       // search by categories
       const places = ["Choose a destination type...", "Museum", "Square", "Church", "Others", "Recommended by users", "All"];
