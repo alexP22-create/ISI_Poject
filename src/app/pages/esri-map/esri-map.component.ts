@@ -70,6 +70,11 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   addPointMode: boolean = false;
   message = "Enter Add Tourist Attraction Mode";
 
+  // layers
+touristAttractionLayer;
+museumsLayer;
+churchesLayer;
+squaresLayer;
   constructor(
     private fbs: FirebaseService,
     public usersService: UsersService,
@@ -263,70 +268,60 @@ export class EsriMapComponent implements OnInit, OnDestroy {
       });
       
       
-     // search by categories
-      // const places = ["Choose a destination type...", "Museum", "Plaza", "Church", "Hill", "Others"];
-      // const select = document.createElement('select');
-      // select.setAttribute("class", "esri-widget esri-select");
-      // select.setAttribute("style", "width: 175px; font-family: 'Avenir Next W00'; font-size: 1em");
-      // places.forEach(function(p){
-      //   const option = document.createElement("option");
-      //   option.value = p;
-      //   option.innerHTML = p;
-      //   select.appendChild(option);
-      // });
-      // this.view.ui.add(select, "top-right");
-      // const locatorUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-  //     Find places and add them to the map
-  //  function findPlaces(category, pt) {
-  //   locator.addressToLocations(locatorUrl, {
-  //     location: pt,
-  //     categories: [category],
-  //     maxLocations: 25,
-  //     outFields: ["Place_addr", "PlaceName"]
-  //   })
-  //   .then(function(results) {
-  //     this.view.popup.close();
-  //     this.view.graphics.removeAll();
-
-  //   });
-  //   this.results.forEach(function(result){
-  //     this.view.graphics.add(
-  //       new Graphic({
-  //         attributes: result.attributes,  // Data attributes returned
-  //         geometry: result.location, // Point returned
-  //         symbol: {
-  //          type: "simple-marker",
-  //          color: "#000000",
-  //          size: "12px",
-  //          outline: {
-  //            color: "#ffffff",
-  //            width: "2px"
-  //          }
-  //         },
-
-  //         popupTemplate: {
-  //           title: "{PlaceName}", // Data attribute names
-  //           content: "{Place_addr}"
-  //         }
-  //      }));
-  //   });
-  // }
-  //   // Search for places in center of map
-  //   // this.view.watch("stationary", function(val) {
-  //   //   if (val) {
-  //   //      findPlaces(select.value, this.view.center);
-  //   //   }
-  //   // });
-  //   // findPlaces(select.value, this.view.center);
-  //   // Listen for category changes and find places
-  //   const myView = this.view;
-  //   select.addEventListener('change', function (event) {
-  //     console.log("Filter event");
-  //     findPlaces((event.target as HTMLTextAreaElement).value, myView.center);
-  //   });
-
-      // Service Area
-      //this.addServiceArea();
+      // search by categories
+      const places = ["Choose a destination type...", "Museum", "Square", "Church", "Others", "Recommended by users", "All"];
+      const select = document.createElement('select');
+      select.setAttribute("class", "esri-widget esri-select");
+      select.setAttribute("style", "width: 175px; font-family: 'Avenir Next W00'; font-size: 1em");
+      places.forEach(function(p){
+        const option = document.createElement("option");
+        option.value = p;
+        option.innerHTML = p;
+        select.appendChild(option);
+      });
+      select.addEventListener('change', (event) => {
+        // console.log("heeeey");
+        const result = (event.target as HTMLTextAreaElement).value;
+        // console.log("=====" + result);
+        if (result == "Choose a destination type...") {
+          this.map.removeAll();
+          this.map.add(this.graphicsLayer);
+          this.map.add(this.museumsLayer);
+          this.map.add(this.churchesLayer);
+          this.map.add(this.touristAttractionLayer);
+          this.map.add(this.squaresLayer);
+        }
+        if (result == "Museum") {
+          this.map.removeAll();
+          this.map.add(this.museumsLayer);
+        }
+        if (result == "Square") {
+          this.map.removeAll();
+          this.map.add(this.squaresLayer);
+        }
+        if (result == "Church") {
+          this.map.removeAll();
+          this.map.add(this.churchesLayer);
+        }
+        if (result == "Others") {
+          this.map.removeAll();
+          this.map.add(this.touristAttractionLayer);
+        }
+        if (result == "All") {
+          this.map.removeAll();
+          this.map.add(this.graphicsLayer);
+          this.map.add(this.museumsLayer);
+          this.map.add(this.churchesLayer);
+          this.map.add(this.touristAttractionLayer);
+          this.map.add(this.squaresLayer);
+        }
+        if (result == "Recommended by users") {
+          this.map.removeAll();
+          this.map.add(this.graphicsLayer);
+        }
+      });
+      this.view.ui.add(select, "top-right");
+      
 
       await this.view.when(); // wait for map to load
       this.addPointItem();
@@ -420,6 +415,10 @@ squaresRenderer = {
       popupTemplate: this.popupTrailheads,
       renderer: this.squaresRenderer
     });
+    this.touristAttractionLayer = touristAttractionLayer;
+    this.museumsLayer = museumsLayer;
+    this.churchesLayer = churchesLayer;
+    this.squaresLayer = squaresLayer;
     this.map.add(touristAttractionLayer);
     this.map.add(museumsLayer);
     this.map.add(churchesLayer);
