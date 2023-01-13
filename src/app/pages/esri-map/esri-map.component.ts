@@ -151,7 +151,21 @@ squaresLayer;
         let point = this.view.toMap({ x: event.x, y: event.y });
         console.log("map moved: ", point.longitude, point.latitude);
         
+      });      
+      
+      //search a location
+      const searchbyAddress = new SearchFunction({  //Add Search widget
+        view: this.view
       });
+      this.view.ui.add(searchbyAddress, "top-right");
+      searchbyAddress.on('search-complete', function (result) {
+        const mp = result.results[0].results[0].feature.geometry;
+        let lat = mp.latitude;
+			  let longt = mp.longitude;
+        let pointVar = new Point({
+          latitude:lat,
+          longitude:longt
+      });});
       
       // Routing
       //caseta punct de plecare
@@ -168,8 +182,13 @@ squaresLayer;
       this.view.ui.add(searchEnd, "top-right");
 
       // search function
+<<<<<<< HEAD
       const searchSimple = new SearchFunction({  //Add Search widget
         view: this.view
+=======
+      const search = new SearchFunction({  //Add Search widget
+        view: this.view,
+>>>>>>> 11d0a5487cfcae6496fa7eb4c36993da8220e785
       });
       this.view.ui.add(searchSimple, "top-right");
 
