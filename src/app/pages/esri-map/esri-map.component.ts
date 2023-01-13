@@ -11,9 +11,11 @@ import {
 } from "@angular/core";
 import { setDefaultOptions, loadModules } from 'esri-loader';
 import * as View from "esri/views/View";
+
 import { Subscription } from "rxjs";
 import { FirebaseService, ITestItem } from "src/app/services/database/firebase";
 // import { FirebaseMockService } from "src/app/services/database/firebase-mock";
+import { UsersService } from 'src/app/services/users.service';
 import esri = __esri; // Esri TypeScript Types
 
 @Component({
@@ -22,6 +24,8 @@ import esri = __esri; // Esri TypeScript Types
   styleUrls: ["./esri-map.component.scss"]
 })
 export class EsriMapComponent implements OnInit, OnDestroy {
+  user$ = this.usersService.currentUserProfile$;
+
   @Output() mapLoadedEvent = new EventEmitter<boolean>();
   // The <div> where we will place the map
   @ViewChild("mapViewNode", { static: true }) private mapViewEl: ElementRef;
@@ -62,7 +66,8 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   message = "Enter Add Tourist Attraction Mode";
 
   constructor(
-    private fbs: FirebaseService
+    private fbs: FirebaseService,
+    public usersService: UsersService,
     // private fbs: FirebaseMockService
   ) { }
   
@@ -132,6 +137,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
         console.log("map moved: ", point.longitude, point.latitude);
         
       });
+      
 
       // search function
       const search = new SearchFunction({  //Add Search widget
@@ -474,24 +480,34 @@ squaresRenderer = {
 
   }
 
+
+
     addPoint(lat: number, lng: number, register: boolean) {   
     const point = { //Create a point
       type: "point",
       longitude: lng,
       latitude: lat
     };
+    
     const simpleMarkerSymbol = {
       type: "simple-marker",
-      color: [226, 119, 40],  // Orange
+      color: [255, 0, 0],  // Red
       outline: {
         color: [255, 255, 255], // White
         width: 1
       },
       text: "point"
     };
+
+    const template = {
+      "title": "Suggested location by other users",
+      "content": "<b>Latitude: </b>" + lat + "lat <br><b>Longitude: </b>" + lng,
+    }
+
     let pointGraphic: esri.Graphic = new this._Graphic({
       geometry: point,
       symbol: simpleMarkerSymbol,
+      popupTemplate: template
     });
 
     this.graphicsLayer.add(pointGraphic);
