@@ -168,7 +168,6 @@ squaresLayer;
         view: this.view
       });
       
-      this.view.ui.add(searchStart, "top-right");
       //caseta destinatie
       const searchEnd = new SearchFunction({  //Add Search widget
         view: this.view
@@ -261,7 +260,8 @@ squaresLayer;
         });
       }
       
-      this.searchStart.on('search-complete', (result) => {
+      this.searchStart = searchStart;
+      searchStart.on('search-complete', (result) => {
         const mp = result.results[0].results[0].feature.geometry;
         let lat = mp.latitude;
 			  let longt = mp.longitude;
@@ -284,12 +284,9 @@ squaresLayer;
           this.view.graphics.add(this.end);
           getRoute();
         }
-      })
-      
-      this.searchStart.on('delete', (result) => {
-        console.log("meow");
       });
-      this.searchEnd.on('search-complete', (result) => {
+      this.searchEnd = searchEnd;
+      searchEnd.on('search-complete', (result) => {
         const mp = result.results[0].results[0].feature.geometry;
         let lat = mp.latitude;
 			  let longt = mp.longitude;
@@ -312,7 +309,7 @@ squaresLayer;
           this.view.graphics.add(this.end);
           getRoute();
         }
-      })
+      });
       
       // search by categories
       const places = ["Choose a destination type...", "Museum", "Square", "Church", "Others", "Recommended by users", "All"];
