@@ -158,14 +158,13 @@ squaresLayer;
       // Routing
       //caseta punct de plecare
       const searchStart = new SearchFunction({  //Add Search widget
-        view: this.view,
-        allPlaceholder: "Choose your starting location"
+        view: this.view
       });
+      
       this.view.ui.add(searchStart, "top-right");
       //caseta destinatie
       const searchEnd = new SearchFunction({  //Add Search widget
-        view: this.view,
-        allPlaceholder: "Choose your destination"
+        view: this.view
       });
       this.view.ui.add(searchEnd, "top-right");
 
@@ -536,7 +535,7 @@ squaresRenderer = {
 
 
 
-    addPoint(lat: number, lng: number, register: boolean) {   
+    addPoint(lat: number, lng: number, register: boolean, name: string) {   
     const point = { //Create a point
       type: "point",
       longitude: lng,
@@ -552,9 +551,9 @@ squaresRenderer = {
       },
       text: "point"
     };
-    this.user$.subscribe(event => profileUser = event);
+    
     const template = {
-      "title": "Suggested location by " + profileUser.displayName,
+      "title": "Suggested location by " + name,
       "content": "<b>Latitude: </b>" + lat + "lat <br><b>Longitude: </b>" + lng,
     }
 
@@ -581,7 +580,7 @@ squaresRenderer = {
       console.log("got new items from list: ", items);
       this.graphicsLayer.removeAll();
       for (let item of items) {
-        this.addPoint(item.lat, item.lng, false);
+        this.addPoint(item.lat, item.lng, false, item.name);
       }
     });
     this.subscriptionObj = this.fbs.getChangeFeedObj().subscribe((stat: ITestItem[]) => {
@@ -604,7 +603,8 @@ squaresRenderer = {
       this.view.on("click", (event) => {
         console.log("point clicked: ", event.mapPoint.latitude, event.mapPoint.longitude);
         if (this.addPointMode == true) {
-          this.fbs.addPointItem(event.mapPoint.latitude, event.mapPoint.longitude);
+          this.user$.subscribe(event => profileUser = event);
+          this.fbs.addPointItem(event.mapPoint.latitude, event.mapPoint.longitude, profileUser.displayName);
         }
       });
   }

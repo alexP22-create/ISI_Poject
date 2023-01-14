@@ -31,9 +31,9 @@ export class FirebaseService {
         return this.objFeed;
     }
 
-    addPointItem(lat: number, lng: number) {
+    addPointItem(lat: number, lng: number, user: string) {
         let item: ITestItem = {
-            name: "test",
+            name: user,
             lat: lat,
             lng: lng
         };
