@@ -1,8 +1,15 @@
 <div fxLayout="row">
-    <div fxFlex="20%" fxLayout="column">
+    <div fxFlex="20%" fxLayout="row">
         <button mat-button mat-button class="full-w button" (click)="changeAddPointMode()"> {{message}} </button>
     </div>
-    <div fxFlex="80%">
-        <div #mapViewNode></div>
+    <div fxFlex="80%" fxLayout="row">
+        <div fxFlex="20%" fxLayout="column">
+            <button mat-button mat-button class="button-routing"  (click)="changeGetStart()"> {{startMessage}} </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button mat-button mat-button  class="button-routing" (click)="changeGetEnd()"> {{endMessage}} </button>
+        </div>
+        <div fxFlex="80%" fxLayout="column">
+            <div #mapViewNode></div>
+        </div>
     </div>
 </div>

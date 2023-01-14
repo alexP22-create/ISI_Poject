@@ -68,12 +68,19 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   start: any;
   end: any;
 
+  getStart: boolean = false;
+  getEnd: boolean = false;
+  startMessage = "Choose start point"
+  endMessage = "Choose destination"
+
   // firebase sync
   isConnected: boolean = false;
   subscriptionList: Subscription;
   subscriptionObj: Subscription;
   addPointMode: boolean = false;
   message = "Enter Add Tourist Attraction Mode";  
+  searchStart;
+  searchEnd;
   // layers
 touristAttractionLayer;
 museumsLayer;
@@ -85,7 +92,6 @@ squaresLayer;
     // private fbs: FirebaseMockService
   ) { }
   
-
   async initializeMap() {
     try {
       // configure esri-loader to use version x from the ArcGIS CDN
@@ -155,19 +161,18 @@ squaresLayer;
         
       });      
       
+
       // Routing
       //caseta punct de plecare
-      const searchStart = new SearchFunction({  //Add Search widget
+      this.searchStart = new SearchFunction({  //Add Search widget
         view: this.view,
         allPlaceholder: "Choose your starting location"
       });
-      this.view.ui.add(searchStart, "top-right");
       //caseta destinatie
-      const searchEnd = new SearchFunction({  //Add Search widget
+      this.searchEnd = new SearchFunction({  //Add Search widget
         view: this.view,
         allPlaceholder: "Choose your destination"
       });
-      this.view.ui.add(searchEnd, "top-right");
 
       // search function
       const searchSimple = new SearchFunction({  //Add Search widget
@@ -256,7 +261,7 @@ squaresLayer;
         });
       }
       
-      searchStart.on('search-complete', (result) => {
+      this.searchStart.on('search-complete', (result) => {
         const mp = result.results[0].results[0].feature.geometry;
         let lat = mp.latitude;
 			  let longt = mp.longitude;
@@ -281,10 +286,10 @@ squaresLayer;
         }
       })
       
-      searchStart.on('delete', (result) => {
+      this.searchStart.on('delete', (result) => {
         console.log("meow");
       });
-      searchEnd.on('search-complete', (result) => {
+      this.searchEnd.on('search-complete', (result) => {
         const mp = result.results[0].results[0].feature.geometry;
         let lat = mp.latitude;
 			  let longt = mp.longitude;
@@ -615,6 +620,30 @@ squaresRenderer = {
       this.message = "Exit Add Tourist Attraction Mode";
     } else {
       this.message = "Enter Add Tourist Attraction Mode";
+    }
+  }
+
+  changeGetStart() {
+    this.getStart = !this.getStart;
+    if(this.getStart == true) {
+      this.view.ui.add(this.searchStart, "manual");
+      this.startMessage = "Done choosing start point"
+
+    } else {
+      this.view.ui.remove(this.searchStart);
+      this.startMessage = "Choose start point"
+    }
+  }
+
+  changeGetEnd() {
+    this.getEnd = !this.getEnd;
+    if(this.getEnd == true) {
+      this.view.ui.add(this.searchEnd, "manual");
+      this.endMessage = "Done choosing destination"
+
+    } else {
+      this.view.ui.remove(this.searchEnd);
+      this.endMessage = "Choose destination"
     }
   }
 
