@@ -9,6 +9,8 @@
             <button mat-button mat-button  class="button-routing" (click)="changeGetEnd()"> {{endMessage}} </button>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button mat-button mat-button  class="button-routing" (click)="endRoute()"> End route </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button *ngIf="isAdmin" mat-button mat-button  class="button-routing" (click)="deleteSuggestedLocations()"> Delete User Recommended Locations </button>
             <div>
                 {{endRouteMessage}}
             </div>

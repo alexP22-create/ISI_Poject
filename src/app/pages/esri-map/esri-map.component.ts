@@ -67,6 +67,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   locationAdded: boolean = false;
   start: any;
   end: any;
+  isAdmin: boolean = false;
 
   getStart: boolean = false;
   getEnd: boolean = false;
@@ -369,6 +370,14 @@ squaresLayer;
       });
       this.view.ui.add(select, "top-right");
       
+      this.user$.subscribe(event => profileUser = event);
+      console.log(profileUser.displayName);
+      if (profileUser.displayName == "Admin") {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+      console.log(this.isAdmin);
       await this.view.when(); // wait for map to load
       this.addPointItem();
       console.log("ArcGIS map loaded");
@@ -376,6 +385,12 @@ squaresLayer;
       return this.view;
     } catch (error) {
       console.log("EsriLoader: ", error);
+    }
+  }
+
+  deleteSuggestedLocations() {
+    if (this.isAdmin == true) {
+      this.fbs.db.list('list').remove();
     }
   }
 
