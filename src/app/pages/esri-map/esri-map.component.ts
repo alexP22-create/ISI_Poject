@@ -273,9 +273,6 @@ squaresLayer;
         this.locationAdded = true;
         addGraphicRoute("origin", pointVar,"start");
         // console.log("A adaugat punct de plecare");
-        console.log(this.view.graphics.toArray());
-        console.log(this.locationAdded);
-        console.log(this.destinationAdded);
 
         // check if routing is possible
         if (this.locationAdded && this.destinationAdded) {
@@ -365,7 +362,6 @@ squaresLayer;
       });
       this.view.ui.add(select, "top-right");
       
-
       await this.view.when(); // wait for map to load
       this.addPointItem();
       console.log("ArcGIS map loaded");
@@ -469,74 +465,6 @@ squaresRenderer = {
 
     console.log("feature layers added");
   }
-  
-  addServiceArea() {
-    const serviceAreaUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea";
-
-      this.view.on("click", function(event){
-        console.log("meowwww");
-        const locationGraphic = addGraphic("origin", event.mapPoint);
-
-        const driveTimeCutoffs = [5,10,15]; // Minutes
-        const serviceAreaParams = createServiceAreaParams(locationGraphic, driveTimeCutoffs);
-
-        solveServiceArea(serviceAreaUrl, serviceAreaParams);
-
-      });
-
-      // Create the location graphic
-      var addGraphic = (type: any, point: any) => {
-        const graphic = new this._Graphic({
-          geometry: point,
-          symbol: {
-            type: "simple-marker",
-            color: "white",
-            size: 8
-          }
-        });
-
-        this.view.graphics.add(graphic);
-        return graphic;
-      }
-      var createServiceAreaParams = (locationGraphic: any, driveTimeCutoffs: any) => {
-
-        // Create one or more locations (facilities) to solve for
-        const featureSet = new this._FeatureSet({
-          features: [locationGraphic]
-        });
-        
-        // // Set all of the input parameters for the service
-        const taskParameters = new this._ServiceAreaParameters({
-          facilities: featureSet,
-          defaultBreaks: driveTimeCutoffs,
-          trimOuterPolygon: true,
-          outSpatialReference: this._MapView.outSpatialReference
-        });
-        return taskParameters;
-      }
-
-      var solveServiceArea = (url: any, serviceAreaParams: any) => {
-        
-        return this._ServiceArea.solve(url, serviceAreaParams)
-          .then(function(result){
-            if (result.serviceAreaPolygons.features.length) {
-              // Draw each service area polygon
-              result.serviceAreaPolygons.features.forEach(function(graphic){
-                graphic.symbol = {
-                  type: "simple-fill",
-                  color: "rgba(255,50,50,.25)"
-                }
-                this.view.graphics.add(graphic,0);
-              });
-            }
-          }).catch((error: any) => {
-            console.log(error);
-          });
-
-      }
-  }
-
-
 
     addPoint(lat: number, lng: number, register: boolean, name: string) {   
     const point = { //Create a point
