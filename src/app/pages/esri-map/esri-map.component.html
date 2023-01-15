@@ -7,6 +7,11 @@
             <button mat-button mat-button class="button-routing"  (click)="changeGetStart()"> {{startMessage}} </button>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button mat-button mat-button  class="button-routing" (click)="changeGetEnd()"> {{endMessage}} </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button mat-button mat-button  class="button-routing" (click)="endRoute()"> End route </button>
+            <div>
+                {{endRouteMessage}}
+            </div>
         </div>
         <div fxFlex="80%" fxLayout="column">
             <div #mapViewNode></div>
