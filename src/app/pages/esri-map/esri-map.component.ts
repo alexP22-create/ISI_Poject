@@ -72,6 +72,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   getEnd: boolean = false;
   startMessage = "Choose start point"
   endMessage = "Choose destination"
+  endRouteMessage=""
 
   // firebase sync
   isConnected: boolean = false;
@@ -81,6 +82,7 @@ export class EsriMapComponent implements OnInit, OnDestroy {
   message = "Enter Add Tourist Attraction Mode";  
   searchStart;
   searchEnd;
+  directions;
   // layers
 touristAttractionLayer;
 museumsLayer;
@@ -191,10 +193,14 @@ squaresLayer;
           geometry: point
         });
         // console.log("Incearca sa adauge");
-        if (where == "start")
+        if (where == "start") {
           this.start=graphic;
-        else if (where == "end")
+          this.view.ui.remove(this.searchStart);
+        }
+        else if (where == "end") {
           this.end = graphic;
+          this.view.ui.remove(this.searchEnd);
+        }
         // this.view.graphics.add(graphic);
         // console.log("A adaugat");
       }
@@ -250,8 +256,9 @@ squaresLayer;
             directions.insertBefore(direction, directions.firstChild);
             // console.log('dist (km) = ', sum);
             //this.view.ui.empty("top-right");
+            this.directions = directions
             this.view.ui.empty("bottom-left");
-            this.view.ui.add(directions, "bottom-left");
+            this.view.ui.add(this.directions, "bottom-left");
   
           }
           // console.log("A terminat rutarea");
@@ -622,26 +629,26 @@ squaresRenderer = {
   }
 
   changeGetStart() {
-    this.getStart = !this.getStart;
-    if(this.getStart == true) {
       this.view.ui.add(this.searchStart, "manual");
-      this.startMessage = "Done choosing start point"
-
-    } else {
-      this.view.ui.remove(this.searchStart);
-      this.startMessage = "Choose start point"
-    }
   }
 
   changeGetEnd() {
-    this.getEnd = !this.getEnd;
-    if(this.getEnd == true) {
       this.view.ui.add(this.searchEnd, "manual");
-      this.endMessage = "Done choosing destination"
+  }
 
+  endRoute() {
+    if(this.locationAdded == false && this.destinationAdded == true) {
+      this.endRouteMessage = "Please choose start point first!"
+    } else if (this.locationAdded == true && this.destinationAdded == false) {
+      this.endRouteMessage = "Please choose destination first!"
+    } else if (this.locationAdded == false && this.destinationAdded == false) {
+      this.endRouteMessage = "Please choose start point and destination first!"
     } else {
-      this.view.ui.remove(this.searchEnd);
-      this.endMessage = "Choose destination"
+      this.endRouteMessage = ""
+      this.view.graphics.removeAll();
+      this.view.ui.remove(this.directions);
+      this.locationAdded = false;
+      this.destinationAdded = false;
     }
   }
 
