@@ -10,7 +10,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button mat-button mat-button  class="button-routing" (click)="endRoute()"> End route </button>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <button mat-button mat-button  class="button-routing" (click)="deleteSuggestedLocations()"> Delete User Recommended Locations </button>
+            <button mat-button mat-button  class="button-routing" (click)="deleteSuggestedLocations()"> {{isAdmin ? "Delete User Recommended Locations" : "Only Admin can use this button"}} </button>
             <div>
                 {{endRouteMessage}}
             </div>

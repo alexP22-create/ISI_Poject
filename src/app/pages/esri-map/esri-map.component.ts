@@ -388,6 +388,10 @@ squaresLayer;
     }
   }
 
+  checkIsAdmin() {
+    return this.isAdmin;
+  }
+  
   deleteSuggestedLocations() {
     if (this.isAdmin == true) {
       this.fbs.db.list('list').remove();
